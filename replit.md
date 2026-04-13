@@ -4,6 +4,10 @@
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
 
+## Artifacts
+
+- **antidoping** (`artifacts/antidoping/`) — CleanSport anti-doping website for athletes. React + Vite, frontend-only, 6 pages: Home, About, Education, Substances, Testing, Resources. No backend needed.
+
 ## Stack
 
 - **Monorepo tool**: pnpm workspaces

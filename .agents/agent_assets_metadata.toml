@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "Ihwoo4O0S0xCI7CWoFHeI"
+uri = "file://artifacts/antidoping/public/images/hero.png"
+type = "image"
+title = "Sprinters leaving starting blocks"
+
+[[generated]]
+id = "Z26M5NRoacGXHNLRzBDoi"
+uri = "file://artifacts/antidoping/public/images/testing.png"
+type = "image"
+title = "Sports medical testing facility"
+
+[[generated]]
+id = "y-C15bofVYx6_3SVFSaeq"
+uri = "file://artifacts/antidoping/public/images/fair-play.png"
+type = "image"
+title = "Athletes shaking hands after race"
+
+[[generated]]
+id = "rv25ldwOqABbamGIh-g8O"
+uri = "file://artifacts/antidoping/public/images/preparation.png"
+type = "image"
+title = "Athlete tying track spikes"
