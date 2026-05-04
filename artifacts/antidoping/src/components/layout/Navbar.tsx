@@ -1,7 +1,8 @@
-import React from "react";
 import { Link, useLocation } from "wouter";
 import { Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useClerk } from "@clerk/react";
+import type { UserResource } from "@clerk/types";
 
 const roleColors: Record<string, string> = {
   athlete: "bg-red-600 text-white",
@@ -17,22 +18,17 @@ const roleLabels: Record<string, string> = {
   official: "⚖️ Official",
 };
 
-interface AuthUser {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
-
 interface NavbarProps {
   role: string;
-  user: AuthUser | null;
-  onSignIn: () => void;
+  user: UserResource | null | undefined;
   onSignOut: () => void;
 }
 
-const Navbar = ({ role, user, onSignIn, onSignOut }: NavbarProps) => {
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+export default function Navbar({ role, user, onSignOut }: NavbarProps) {
   const [location] = useLocation();
+  const { signOut } = useClerk();
 
   const navLinks = [
     { href: "/about", label: "About" },
@@ -41,6 +37,11 @@ const Navbar = ({ role, user, onSignIn, onSignOut }: NavbarProps) => {
     { href: "/testing", label: "Testing" },
     { href: "/resources", label: "Resources" },
   ];
+
+  async function handleSignOut() {
+    await signOut();
+    onSignOut();
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -66,7 +67,10 @@ const Navbar = ({ role, user, onSignIn, onSignOut }: NavbarProps) => {
         </nav>
 
         <div className="flex items-center gap-3">
-          <span className={cn("hidden md:inline-flex items-center px-3 py-1 rounded text-xs font-bold tracking-wide", roleColors[role] ?? "bg-gray-700 text-white")}>
+          <span className={cn(
+            "hidden md:inline-flex items-center px-3 py-1 rounded text-xs font-bold tracking-wide",
+            roleColors[role] ?? "bg-gray-700 text-white"
+          )}>
             {roleLabels[role] ?? role}
           </span>
 
@@ -82,40 +86,30 @@ const Navbar = ({ role, user, onSignIn, onSignOut }: NavbarProps) => {
                 My Dashboard
               </Link>
               <button
-                onClick={onSignOut}
-                className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded bg-gray-100 text-gray-700 h-9 px-4 py-2 text-sm font-medium hover:bg-gray-200 transition-colors"
+                onClick={handleSignOut}
+                className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded bg-muted text-muted-foreground h-9 px-4 py-2 text-sm font-medium hover:bg-muted/80 transition-colors"
               >
                 Sign Out
               </button>
             </>
           ) : (
             <>
-              <button
-                onClick={onSignIn}
+              <Link
+                href="/sign-in"
                 className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded border border-primary text-primary h-9 px-4 py-2 text-sm font-medium hover:bg-primary hover:text-white transition-colors"
               >
                 Sign In
-              </button>
+              </Link>
               <Link
-                href="/testing"
+                href="/sign-up"
                 className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded bg-primary text-primary-foreground h-9 px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors"
               >
-                Report Doping
+                Get Started
               </Link>
             </>
           )}
-
-          <button className="md:hidden flex items-center justify-center h-10 w-10">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="bevel">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
         </div>
       </div>
     </header>
   );
-};
-
-export default Navbar;
+}

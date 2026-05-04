@@ -1,27 +1,24 @@
 import { Router } from "express";
-import jwt from "jsonwebtoken";
+import { getAuth } from "@clerk/express";
 import pg from "pg";
 
 const router = Router();
 const { Pool } = pg;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const JWT_SECRET = process.env.SESSION_SECRET ?? "cleansport-secret-2024";
 
-function getUserId(req: any): number | null {
-  const auth = req.headers.authorization as string | undefined;
-  if (!auth?.startsWith("Bearer ")) return null;
-  try {
-    const payload = jwt.verify(auth.slice(7), JWT_SECRET) as { userId: number };
-    return payload.userId;
-  } catch {
-    return null;
-  }
+async function getInternalUserId(clerkId: string): Promise<number | null> {
+  const result = await pool.query("SELECT id FROM users WHERE clerk_id = $1", [clerkId]);
+  return result.rows[0]?.id ?? null;
 }
 
 // GET /api/progress — get current user's module progress
 router.get("/progress", async (req, res) => {
-  const userId = getUserId(req);
-  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+  const auth = getAuth(req);
+  const clerkId = auth?.userId;
+  if (!clerkId) return res.status(401).json({ error: "Unauthorized" });
+
+  const userId = await getInternalUserId(clerkId);
+  if (!userId) return res.status(404).json({ error: "User not found. Please complete onboarding." });
 
   try {
     const modules = await pool.query("SELECT * FROM modules ORDER BY id");
@@ -48,8 +45,12 @@ router.get("/progress", async (req, res) => {
 
 // POST /api/progress/:slug — mark a module complete
 router.post("/progress/:slug", async (req, res) => {
-  const userId = getUserId(req);
-  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+  const auth = getAuth(req);
+  const clerkId = auth?.userId;
+  if (!clerkId) return res.status(401).json({ error: "Unauthorized" });
+
+  const userId = await getInternalUserId(clerkId);
+  if (!userId) return res.status(404).json({ error: "User not found." });
 
   const { slug } = req.params;
   const { score } = req.body as { score?: number };
@@ -71,8 +72,12 @@ router.post("/progress/:slug", async (req, res) => {
 
 // GET /api/tests — get user's test records
 router.get("/tests", async (req, res) => {
-  const userId = getUserId(req);
-  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+  const auth = getAuth(req);
+  const clerkId = auth?.userId;
+  if (!clerkId) return res.status(401).json({ error: "Unauthorized" });
+
+  const userId = await getInternalUserId(clerkId);
+  if (!userId) return res.status(404).json({ error: "User not found." });
 
   try {
     const result = await pool.query(
@@ -88,8 +93,12 @@ router.get("/tests", async (req, res) => {
 
 // GET /api/dashboard — full dashboard data
 router.get("/dashboard", async (req, res) => {
-  const userId = getUserId(req);
-  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+  const auth = getAuth(req);
+  const clerkId = auth?.userId;
+  if (!clerkId) return res.status(401).json({ error: "Unauthorized" });
+
+  const userId = await getInternalUserId(clerkId);
+  if (!userId) return res.status(404).json({ error: "User not found." });
 
   try {
     const userResult = await pool.query("SELECT id, name, email, role FROM users WHERE id = $1", [userId]);
