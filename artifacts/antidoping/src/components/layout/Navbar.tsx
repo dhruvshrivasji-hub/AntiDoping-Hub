@@ -3,7 +3,21 @@ import { Link, useLocation } from "wouter";
 import { Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const Navbar = () => {
+const roleColors: Record<string, string> = {
+  athlete: "bg-red-600 text-white",
+  coach: "bg-blue-700 text-white",
+  support: "bg-green-700 text-white",
+  official: "bg-gray-700 text-white",
+};
+
+const roleLabels: Record<string, string> = {
+  athlete: "🏃 Athlete",
+  coach: "📋 Coach",
+  support: "🩺 Support Staff",
+  official: "⚖️ Official",
+};
+
+const Navbar = ({ role }: { role: string }) => {
   const [location] = useLocation();
 
   const navLinks = [
@@ -35,7 +49,12 @@ const Navbar = () => {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {role && (
+            <span className={cn("hidden md:inline-flex items-center px-3 py-1 rounded text-xs font-bold tracking-wide", roleColors[role] ?? "bg-gray-700 text-white")}>
+              {roleLabels[role] ?? role}
+            </span>
+          )}
           <Link
             href="/testing"
             className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded bg-primary text-primary-foreground h-9 px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors"

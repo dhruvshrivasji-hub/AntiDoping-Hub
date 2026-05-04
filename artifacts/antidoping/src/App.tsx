@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -11,12 +12,13 @@ import Education from "./pages/Education";
 import Substances from "./pages/Substances";
 import Testing from "./pages/Testing";
 import Resources from "./pages/Resources";
+import WelcomeScreen from "./components/WelcomeScreen";
 
 const queryClient = new QueryClient();
 
-function Router() {
+function Router({ role }: { role: string }) {
   return (
-    <PageLayout>
+    <PageLayout role={role}>
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/about" component={About} />
@@ -31,12 +33,18 @@ function Router() {
 }
 
 function App() {
+  const [role, setRole] = useState<string | null>(null);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
+        {!role ? (
+          <WelcomeScreen onComplete={setRole} />
+        ) : (
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <Router role={role} />
+          </WouterRouter>
+        )}
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>

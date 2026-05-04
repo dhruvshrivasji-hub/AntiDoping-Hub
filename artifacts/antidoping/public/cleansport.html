@@ -165,6 +165,52 @@
 </head>
 <body>
 
+<!-- WELCOME SCREEN -->
+<div id="welcome" style="position:fixed;inset:0;z-index:1000;background:#111827;display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity 0.5s ease;">
+  <div style="width:100%;max-width:560px;text-align:center;">
+    <div style="font-family:'Oswald',sans-serif;font-size:1.3rem;font-weight:700;color:#fff;letter-spacing:0.06em;margin-bottom:44px;display:flex;align-items:center;justify-content:center;gap:10px;">
+      <span style="color:#DC2626;font-size:1.5rem;">⚡</span> CLEANSPORT
+    </div>
+    <h1 style="font-family:'Oswald',sans-serif;font-size:clamp(1.8rem,5vw,3rem);text-transform:uppercase;color:#fff;line-height:1.1;margin-bottom:10px;">Welcome to<br><span style="color:#DC2626;">CleanSport</span></h1>
+    <p style="color:#9CA3AF;font-size:1rem;margin-bottom:36px;">Tell us who you are so we can guide you to the right resources.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;" id="roleGrid">
+      <button class="role-btn" data-role="athlete" onclick="selectRole(this)">
+        <div style="font-size:2rem;margin-bottom:8px;">🏃</div>
+        <div class="role-title">Athlete</div>
+        <div class="role-desc">I compete in organized sport</div>
+      </button>
+      <button class="role-btn" data-role="coach" onclick="selectRole(this)">
+        <div style="font-size:2rem;margin-bottom:8px;">📋</div>
+        <div class="role-title">Coach</div>
+        <div class="role-desc">I train and guide athletes</div>
+      </button>
+      <button class="role-btn" data-role="support" onclick="selectRole(this)">
+        <div style="font-size:2rem;margin-bottom:8px;">🩺</div>
+        <div class="role-title">Support Staff</div>
+        <div class="role-desc">Medical, physio, or team staff</div>
+      </button>
+      <button class="role-btn" data-role="official" onclick="selectRole(this)">
+        <div style="font-size:2rem;margin-bottom:8px;">⚖️</div>
+        <div class="role-title">Official / Fan</div>
+        <div class="role-desc">Referee, administrator, or public</div>
+      </button>
+    </div>
+    <button id="continueBtn" onclick="startSite()" disabled style="width:100%;padding:15px;background:rgba(255,255,255,0.08);color:#6B7280;border:none;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;cursor:not-allowed;border-radius:6px;transition:all 0.2s;">
+      Select your role to continue
+    </button>
+    <p style="color:#4B5563;font-size:0.74rem;margin-top:16px;">Your choice helps us show the most relevant information.</p>
+  </div>
+</div>
+
+<style>
+  .role-btn { background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.1); border-radius:8px; padding:22px 14px; cursor:pointer; text-align:center; transition:all 0.2s; color:#fff; width:100%; }
+  .role-btn:hover { border-color:rgba(220,38,38,0.5); background:rgba(220,38,38,0.06); }
+  .role-btn.selected { border-color:#DC2626; background:rgba(220,38,38,0.12); }
+  .role-title { font-family:'Oswald',sans-serif; font-size:0.95rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:5px; }
+  .role-btn.selected .role-title { color:#DC2626; }
+  .role-desc { font-size:0.76rem; color:#9CA3AF; }
+</style>
+
 <!-- NAV -->
 <nav>
   <div class="logo" onclick="go('home')">
@@ -499,6 +545,37 @@
     { name: "Ibuprofen",           cat: "NSAIDs",            status: "green",  label: "Permitted",           note: "—" },
     { name: "Caffeine",            cat: "Monitoring Program",status: "green",  label: "Permitted",           note: "Monitored" },
   ];
+
+  // ── Welcome Screen ──
+  let selectedRole = null;
+
+  function selectRole(btn) {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedRole = btn.dataset.role;
+    const roleLabels = { athlete:'Athlete', coach:'Coach', support:'Support Staff', official:'Official' };
+    const cb = document.getElementById('continueBtn');
+    cb.disabled = false;
+    cb.style.background = '#DC2626';
+    cb.style.color = '#fff';
+    cb.style.cursor = 'pointer';
+    cb.textContent = 'Continue as ' + roleLabels[selectedRole] + ' →';
+  }
+
+  function startSite() {
+    if (!selectedRole) return;
+    const w = document.getElementById('welcome');
+    w.style.opacity = '0';
+    setTimeout(() => { w.style.display = 'none'; }, 500);
+
+    // Show role badge in nav
+    const roleColors = { athlete:'#DC2626', coach:'#1d4ed8', support:'#15803d', official:'#374151' };
+    const roleLabels = { athlete:'🏃 Athlete', coach:'📋 Coach', support:'🩺 Support Staff', official:'⚖️ Official' };
+    const badge = document.createElement('span');
+    badge.textContent = roleLabels[selectedRole];
+    badge.style.cssText = `background:${roleColors[selectedRole]};color:#fff;font-size:0.72rem;font-weight:700;padding:4px 10px;letter-spacing:0.05em;text-transform:uppercase;border-radius:4px;`;
+    document.querySelector('nav').appendChild(badge);
+  }
 
   // ── Navigation ──
   function go(id) {

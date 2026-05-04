@@ -4,12 +4,13 @@ import Footer from "./Footer";
 
 interface PageLayoutProps {
   children: React.ReactNode;
+  role: string;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
+const PageLayout: React.FC<PageLayoutProps> = ({ children, role }) => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      <Navbar role={role} />
       <main className="flex-1 flex flex-col">
         {children}
       </main>
