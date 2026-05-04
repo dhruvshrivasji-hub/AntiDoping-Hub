@@ -1,7 +1,112 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
-import { Shield, Target, Award, ArrowRight, Search, FileText } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Shield, Target, Award, ArrowRight, Search, FileText, AlertTriangle } from "lucide-react";
+
+const STEROID_WARNINGS = [
+  { headline: "Steroids Destroy Careers", sub: "A single positive test can end everything you've worked for — permanently." },
+  { headline: "Your Health Is the Prize", sub: "Anabolic steroids cause heart failure, liver damage, and hormonal collapse." },
+  { headline: "There Is No Shortcut", sub: "Performance-enhancing drugs are detected — in competition and out of it." },
+  { headline: "Play Clean. Win Clean.", sub: "Over 350,000 drug tests are conducted every year. Don't risk it." },
+  { headline: "Cheating Harms Everyone", sub: "Doping steals medals from clean athletes and corrupts the spirit of sport." },
+];
+
+function SteroidWarningBanner() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((i) => (i + 1) % STEROID_WARNINGS.length);
+    }, 3800);
+    return () => clearInterval(interval);
+  }, []);
+
+  const current = STEROID_WARNINGS[index];
+
+  return (
+    <section className="relative overflow-hidden bg-[#0a0a0a] border-y-2 border-red-600 py-14">
+      {/* Animated red glow */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        animate={{ opacity: [0.08, 0.18, 0.08] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        style={{ background: "radial-gradient(ellipse at center, #dc2626 0%, transparent 70%)" }}
+      />
+
+      {/* Scrolling background text */}
+      <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none select-none opacity-[0.035]">
+        <motion.div
+          className="whitespace-nowrap font-display font-black text-[10rem] text-red-600 uppercase"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        >
+          NO STEROIDS&nbsp;&nbsp;&nbsp;PLAY CLEAN&nbsp;&nbsp;&nbsp;NO STEROIDS&nbsp;&nbsp;&nbsp;PLAY CLEAN&nbsp;&nbsp;&nbsp;
+        </motion.div>
+      </div>
+
+      <div className="container relative z-10 px-4 md:px-6 flex flex-col items-center text-center">
+        {/* Pulsing icon */}
+        <motion.div
+          animate={{ scale: [1, 1.12, 1], opacity: [0.9, 1, 0.9] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+          className="mb-6 p-4 rounded-full bg-red-600/15 border border-red-600/40"
+        >
+          <AlertTriangle className="h-10 w-10 text-red-500" strokeWidth={2.5} />
+        </motion.div>
+
+        <p className="text-red-500 font-bold text-xs tracking-[0.3em] uppercase mb-4">
+          Anti-Doping Warning
+        </p>
+
+        {/* Cycling message */}
+        <div className="relative h-36 md:h-28 flex items-center justify-center w-full max-w-3xl">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 22, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -22, filter: "blur(8px)" }}
+              transition={{ duration: 0.55, ease: "easeOut" }}
+              className="absolute inset-0 flex flex-col items-center justify-center"
+            >
+              <h2 className="font-display font-black text-3xl md:text-5xl text-white uppercase tracking-tight mb-3">
+                {current.headline.split(" ").map((word, i) =>
+                  word === "Steroids" || word === "Destroy" || word === "Cheating" ? (
+                    <span key={i} className="text-red-500">{word} </span>
+                  ) : (
+                    <span key={i}>{word} </span>
+                  )
+                )}
+              </h2>
+              <p className="text-gray-400 text-base md:text-lg max-w-xl">{current.sub}</p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Dot indicators */}
+        <div className="flex gap-2 mt-8">
+          {STEROID_WARNINGS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === index ? "w-8 bg-red-500" : "w-2 bg-gray-700"
+              }`}
+            />
+          ))}
+        </div>
+
+        <Link
+          href="/substances"
+          className="mt-8 inline-flex items-center gap-2 border border-red-600 text-red-500 hover:bg-red-600 hover:text-white px-6 py-3 text-sm font-bold uppercase tracking-widest transition-all duration-200"
+        >
+          <AlertTriangle className="h-4 w-4" />
+          Check Prohibited Substances
+        </Link>
+      </div>
+    </section>
+  );
+}
 
 const Home = () => {
   return (
@@ -43,6 +148,8 @@ const Home = () => {
           </motion.div>
         </div>
       </section>
+
+      <SteroidWarningBanner />
 
       {/* Stats / Impact */}
       <section className="py-20 bg-background border-b border-border">
