@@ -17,7 +17,21 @@ const roleLabels: Record<string, string> = {
   official: "⚖️ Official",
 };
 
-const Navbar = ({ role }: { role: string }) => {
+interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface NavbarProps {
+  role: string;
+  user: AuthUser | null;
+  onSignIn: () => void;
+  onSignOut: () => void;
+}
+
+const Navbar = ({ role, user, onSignIn, onSignOut }: NavbarProps) => {
   const [location] = useLocation();
 
   const navLinks = [
@@ -35,6 +49,7 @@ const Navbar = ({ role }: { role: string }) => {
           <Activity className="h-6 w-6 text-primary" />
           <span className="font-display font-bold text-xl tracking-tight">CLEANSPORT</span>
         </Link>
+
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           {navLinks.map((link) => (
             <Link
@@ -49,20 +64,53 @@ const Navbar = ({ role }: { role: string }) => {
             </Link>
           ))}
         </nav>
+
         <div className="flex items-center gap-3">
-          {role && (
-            <span className={cn("hidden md:inline-flex items-center px-3 py-1 rounded text-xs font-bold tracking-wide", roleColors[role] ?? "bg-gray-700 text-white")}>
-              {roleLabels[role] ?? role}
-            </span>
+          <span className={cn("hidden md:inline-flex items-center px-3 py-1 rounded text-xs font-bold tracking-wide", roleColors[role] ?? "bg-gray-700 text-white")}>
+            {roleLabels[role] ?? role}
+          </span>
+
+          {user ? (
+            <>
+              <Link
+                href="/dashboard"
+                className={cn(
+                  "hidden md:inline-flex items-center justify-center whitespace-nowrap rounded border border-primary text-primary h-9 px-4 py-2 text-sm font-medium hover:bg-primary hover:text-white transition-colors",
+                  location === "/dashboard" && "bg-primary text-white"
+                )}
+              >
+                My Dashboard
+              </Link>
+              <button
+                onClick={onSignOut}
+                className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded bg-gray-100 text-gray-700 h-9 px-4 py-2 text-sm font-medium hover:bg-gray-200 transition-colors"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={onSignIn}
+                className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded border border-primary text-primary h-9 px-4 py-2 text-sm font-medium hover:bg-primary hover:text-white transition-colors"
+              >
+                Sign In
+              </button>
+              <Link
+                href="/testing"
+                className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded bg-primary text-primary-foreground h-9 px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Report Doping
+              </Link>
+            </>
           )}
-          <Link
-            href="/testing"
-            className="hidden md:inline-flex items-center justify-center whitespace-nowrap rounded bg-primary text-primary-foreground h-9 px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors"
-          >
-            Report Doping
-          </Link>
+
           <button className="md:hidden flex items-center justify-center h-10 w-10">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="bevel"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="bevel">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
           </button>
         </div>
       </div>
