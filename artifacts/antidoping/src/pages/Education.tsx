@@ -103,6 +103,21 @@ const MODULES: ModuleData[] = [
         options: ["1984", "1992", "1999", "2004"],
         correct: 2,
       },
+      {
+        question: "How many Anti-Doping Rule Violations (ADRVs) are defined in the current WADA Code?",
+        options: ["5", "7", "10", "14"],
+        correct: 2,
+      },
+      {
+        question: "A coach secretly adds a prohibited substance to an athlete's drink. Under strict liability, who is responsible?",
+        options: ["The coach only", "The sports federation", "Neither — it was accidental", "The athlete, regardless of how it entered their body"],
+        correct: 3,
+      },
+      {
+        question: "Which organisation is responsible for publishing the global Prohibited List?",
+        options: ["The International Olympic Committee (IOC)", "The World Anti-Doping Agency (WADA)", "Each national sports federation independently", "The United Nations Office on Drugs and Crime"],
+        correct: 1,
+      },
     ],
   },
   {
@@ -163,6 +178,21 @@ const MODULES: ModuleData[] = [
       {
         question: "What percentage of supplements may contain undisclosed prohibited substances according to studies?",
         options: ["Less than 2%", "Around 5%", "Up to 25%", "More than 50%"],
+        correct: 2,
+      },
+      {
+        question: "What does EPO (erythropoietin) primarily do to improve athletic performance?",
+        options: ["Increases muscle mass and strength", "Stimulates red blood cell production, boosting endurance", "Suppresses pain signals during competition", "Accelerates recovery from muscle injury"],
+        correct: 1,
+      },
+      {
+        question: "Which tool should athletes use to check whether a specific medication is prohibited?",
+        options: ["A general internet search", "Their club doctor's opinion", "Global DRO (Drug Reference Online) or Informed Sport", "The manufacturer's label alone"],
+        correct: 2,
+      },
+      {
+        question: "A substance 'prohibited in competition only' means it is banned...",
+        options: ["At all times, 365 days a year", "Only when an athlete is actively racing or playing", "During the competition period defined by the relevant sport", "Only if the athlete is in the top 10 of their sport"],
         correct: 2,
       },
     ],
@@ -257,6 +287,36 @@ const MODULES: ModuleData[] = [
           "It is shared with the athlete's national federation",
         ],
         correct: 1,
+      },
+      {
+        question: "What is an Adverse Analytical Finding (AAF)?",
+        options: [
+          "A formal warning issued for a missed whereabouts appointment",
+          "A laboratory report detecting a prohibited substance or method",
+          "A failed application for a Therapeutic Use Exemption",
+          "A notice that an athlete refused to provide a sample",
+        ],
+        correct: 1,
+      },
+      {
+        question: "What is the Athlete Biological Passport (ABP)?",
+        options: [
+          "A travel document required for international competition",
+          "A certificate confirming the athlete has never tested positive",
+          "A longitudinal record of biological parameters monitored over time",
+          "A complete medical history shared between NADOs and WADA",
+        ],
+        correct: 2,
+      },
+      {
+        question: "Is it an anti-doping rule violation to refuse to provide a sample when notified by a Doping Control Officer?",
+        options: [
+          "No — athletes can refuse without consequence",
+          "Only if the athlete is in a registered testing pool",
+          "Yes — refusal is treated the same as a positive test",
+          "Only during in-competition testing, not out-of-competition",
+        ],
+        correct: 2,
       },
     ],
   },
@@ -357,6 +417,36 @@ const MODULES: ModuleData[] = [
         ],
         correct: 2,
       },
+      {
+        question: "Who reviews TUE applications and decides whether to grant them?",
+        options: [
+          "WADA's legal team in Lausanne",
+          "A TUE Committee of at least 3 independent physicians",
+          "The athlete's own team doctor",
+          "A panel of fellow athletes elected by the national federation",
+        ],
+        correct: 1,
+      },
+      {
+        question: "Can WADA overturn a TUE that was granted by a national anti-doping organisation?",
+        options: [
+          "No — national decisions are always final",
+          "Only if the athlete appeals the decision first",
+          "Yes — WADA has the right to review and reverse any TUE",
+          "Only for Olympic sports during the Games themselves",
+        ],
+        correct: 2,
+      },
+      {
+        question: "Which of these medical conditions might legitimately require a TUE?",
+        options: [
+          "A sprained ankle requiring ice treatment",
+          "Mild dehydration during competition",
+          "ADHD requiring methylphenidate (a stimulant)",
+          "A headache treated with paracetamol",
+        ],
+        correct: 2,
+      },
     ],
   },
   {
@@ -451,6 +541,31 @@ const MODULES: ModuleData[] = [
           "A 60-minute time slot at a specific location for testing",
           "Their full training program with weights and reps",
           "Medical records for that day",
+        ],
+        correct: 1,
+      },
+      {
+        question: "What is ADAMS in the context of anti-doping?",
+        options: [
+          "A biometric monitoring device worn by elite athletes",
+          "A WADA-accredited laboratory network across Europe",
+          "An online platform for filing whereabouts, TUE applications, and results management",
+          "A penalty points system that accumulates across a career",
+        ],
+        correct: 2,
+      },
+      {
+        question: "How often must athletes in the Registered Testing Pool (RTP) file their whereabouts?",
+        options: ["Daily", "Weekly", "Monthly", "Quarterly (every 3 months)"],
+        correct: 3,
+      },
+      {
+        question: "What are the two types of Whereabouts Failures (WF)?",
+        options: [
+          "Failed test and positive test",
+          "Filing Failure (FF) and Missed Test (MT)",
+          "Late submission and wrong location",
+          "Competition failure and training failure",
         ],
         correct: 1,
       },
@@ -551,6 +666,36 @@ const MODULES: ModuleData[] = [
         ],
         correct: 0,
       },
+      {
+        question: "What are 'Specified Substances' under the WADA Code?",
+        options: [
+          "Substances prohibited only for professional athletes, not amateurs",
+          "Substances more likely to have legitimate non-performance uses, allowing a wider range of sanctions",
+          "Substances that require a TUE before they can be used legally",
+          "Substances that are only banned in certain sports",
+        ],
+        correct: 1,
+      },
+      {
+        question: "In a team relay event, if one athlete is found to have doped, what can happen to the team?",
+        options: [
+          "Only the individual athlete is penalised; teammates are unaffected",
+          "The entire team is banned from competition for 2 years",
+          "The team's relay result may be disqualified, affecting clean teammates too",
+          "The team must forfeit the following season's competition",
+        ],
+        correct: 2,
+      },
+      {
+        question: "Which long-term health risk is specifically associated with anabolic steroid use?",
+        options: [
+          "Irreversible bone growth (acromegaly)",
+          "Dangerous blood thickening leading to stroke",
+          "Heart enlargement, liver tumors, and hormonal disruption",
+          "Seizures and hyperthermia during competition",
+        ],
+        correct: 2,
+      },
     ],
   },
 ];
@@ -558,7 +703,7 @@ const MODULES: ModuleData[] = [
 // ─── Quiz Component ───────────────────────────────────────────────────────────
 
 interface QuizProps {
-  quiz: QuizQ[];
+  quizPool: QuizQ[];
   color: string;
   slug: string;
   isCompleted: boolean;
@@ -566,25 +711,35 @@ interface QuizProps {
   onComplete: (slug: string, score: number) => void;
 }
 
-function ModuleQuiz({ quiz, color, slug, isCompleted, isSignedIn, onComplete }: QuizProps) {
-  const [answers, setAnswers] = useState<(number | null)[]>(quiz.map(() => null));
+function ModuleQuiz({ quizPool, color, slug, isCompleted, isSignedIn, onComplete }: QuizProps) {
+  // Pick 3 random questions from the pool each time the quiz mounts
+  const [quiz] = useState<QuizQ[]>(() => {
+    const pool = Array.isArray(quizPool) ? quizPool : [];
+    const shuffled = [...pool].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 3);
+  });
+
+  const [answers, setAnswers] = useState<(number | null)[]>([null, null, null]);
   const [submitted, setSubmitted] = useState(false);
+  const [result, setResult] = useState<{ correct: number; passed: boolean; score: number } | null>(null);
 
-  const correct = submitted ? answers.filter((a, i) => a === quiz[i].correct).length : 0;
-  const passed = submitted && correct >= 2;
-  const score = Math.round((correct / quiz.length) * 100);
-
+  // Compute result eagerly inside the handler to avoid stale state
   function handleSubmit() {
     if (answers.some((a) => a === null)) return;
+    const correctCount = answers.filter((a, i) => a === quiz[i].correct).length;
+    const score = Math.round((correctCount / quiz.length) * 100);
+    const passed = correctCount >= 2;
+    setResult({ correct: correctCount, passed, score });
     setSubmitted(true);
-    if (correct >= 2 && isSignedIn) {
+    if (passed && isSignedIn) {
       onComplete(slug, score);
     }
   }
 
   function handleRetry() {
-    setAnswers(quiz.map(() => null));
+    setAnswers([null, null, null]);
     setSubmitted(false);
+    setResult(null);
   }
 
   if (isCompleted) {
@@ -603,7 +758,7 @@ function ModuleQuiz({ quiz, color, slug, isCompleted, isSignedIn, onComplete }: 
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-2">
         <div className="h-px flex-1 bg-slate-700" />
-        <span className="text-xs font-bold uppercase tracking-widest text-slate-500 px-3">Knowledge Check — Pass 2 of 3</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-slate-500 px-3">Knowledge Check — Pass 2 of 3 (Random Questions)</span>
         <div className="h-px flex-1 bg-slate-700" />
       </div>
 
@@ -665,32 +820,34 @@ function ModuleQuiz({ quiz, color, slug, isCompleted, isSignedIn, onComplete }: 
         >
           Submit Answers
         </button>
-      ) : (
+      ) : result && (
         <div className="space-y-3">
           <div className={`rounded-xl px-5 py-4 border flex items-start gap-3 ${
-            passed ? "bg-green-900/20 border-green-600/40" : "bg-red-900/20 border-red-600/40"
+            result.passed ? "bg-green-900/20 border-green-600/40" : "bg-red-900/20 border-red-600/40"
           }`}>
-            {passed ? (
+            {result.passed ? (
               <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
             ) : (
               <XCircle className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
             )}
             <div>
-              <div className={`font-bold text-sm ${passed ? "text-green-400" : "text-red-400"}`}>
-                {passed ? `Passed! ${correct}/${quiz.length} correct — module complete.` : `${correct}/${quiz.length} correct — need at least 2 to pass.`}
+              <div className={`font-bold text-sm ${result.passed ? "text-green-400" : "text-red-400"}`}>
+                {result.passed
+                  ? `Passed! ${result.correct}/${quiz.length} correct — module complete.`
+                  : `${result.correct}/${quiz.length} correct — need at least 2 to pass.`}
               </div>
-              {passed && !isSignedIn && (
+              {result.passed && !isSignedIn && (
                 <div className="text-slate-400 text-xs mt-1 flex items-center gap-1">
                   <Lock className="h-3 w-3" />
                   <Link href="/sign-in" className="text-white underline">Sign in</Link> to save progress to the leaderboard.
                 </div>
               )}
-              {passed && isSignedIn && (
+              {result.passed && isSignedIn && (
                 <div className="text-slate-400 text-xs mt-1">Progress saved to your dashboard and leaderboard.</div>
               )}
             </div>
           </div>
-          {!passed && (
+          {!result.passed && (
             <button
               onClick={handleRetry}
               className="w-full py-3 rounded-xl font-bold text-sm border-2 border-slate-700 text-slate-300 hover:border-slate-500 transition-colors"
@@ -805,7 +962,7 @@ function ModuleCard({
 
               {/* Quiz */}
               <ModuleQuiz
-                quiz={mod.quiz}
+                quizPool={mod.quiz}
                 color={mod.color}
                 slug={mod.slug}
                 isCompleted={isCompleted}
