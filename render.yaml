@@ -3,9 +3,7 @@ services:
     name: antidoping-hub
     env: node
     buildCommand: pnpm install --frozen-lockfile && pnpm --filter @workspace/antidoping run build
-    startCommand: pnpm --filter @workspace/antidoping run start
+    startCommand: node_modules/.bin/serve -s artifacts/antidoping/dist/public -l $PORT
     envVars:
       - key: VITE_CLERK_PUBLISHABLE_KEY
         sync: false
-      - key: NODE_ENV
-        value: production
