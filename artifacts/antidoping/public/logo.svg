@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <circle cx="24" cy="24" r="20" fill="#DC2626"/>
+  <path d="M17 24l5 5 9-10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="52" y="33" font-family="Arial Black, sans-serif" font-weight="900" font-size="22" fill="#ffffff" letter-spacing="1">CLEANSPORT</text>
+</svg>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CleanSport — Anti-Doping for Athletes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* === BASE === */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #DC2626;
+      --dark: #111827;
+      --gray: #6B7280;
+      --light: #F3F4F6;
+      --border: #E5E7EB;
+    }
+    body { font-family: 'Inter', sans-serif; color: var(--dark); }
+    h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+    a, button { cursor: pointer; }
+    img { width: 100%; display: block; object-fit: cover; }
+
+    /* === LAYOUT === */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 24px; }
+    .section.gray { background: var(--light); }
+    .section.dark { background: var(--dark); color: #fff; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    /* === NAV === */
+    nav {
+      position: sticky; top: 0; z-index: 99;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .logo span { color: var(--red); }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { font-size: 0.875rem; font-weight: 500; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--red); font-weight: 600; }
+    .nav-btn { background: var(--red); color: #fff; border: none; padding: 9px 18px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    /* === BUTTONS === */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: none; text-decoration: none; }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-red:hover { background: #b91c1c; }
+    .btn-white { background: #fff; color: var(--dark); }
+    .btn-white:hover { background: var(--light); }
+    .btn-outline { background: transparent; color: var(--dark); border: 2px solid var(--border); }
+    .btn-outline:hover { border-color: var(--red); color: var(--red); }
+
+    /* === PAGES === */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* === HERO === */
+    .hero {
+      position: relative; min-height: 88vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; color: #fff; overflow: hidden;
+    }
+    .hero img { position: absolute; inset: 0; height: 100%; filter: brightness(0.4); }
+    .hero-content { position: relative; z-index: 1; padding: 48px 24px; }
+    .hero-tag { display: inline-block; background: var(--red); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 12px; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(3rem, 8vw, 6.5rem); line-height: 1; margin-bottom: 20px; }
+    .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 500px; margin: 0 auto 36px; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* === STATS === */
+    .stats { padding: 60px 24px; border-bottom: 1px solid var(--border); }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: center; max-width: 700px; margin: 0 auto; }
+    .stat-num { font-family: 'Oswald', sans-serif; font-size: 3.5rem; color: var(--red); line-height: 1; }
+    .stat-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); margin-top: 6px; }
+
+    /* === CARDS === */
+    .card { background: #fff; border: 1px solid var(--border); padding: 36px; transition: transform 0.2s, box-shadow 0.2s; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .card-icon { width: 48px; height: 48px; background: rgba(220,38,38,0.1); color: var(--red); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .card h3 { font-size: 1rem; margin-bottom: 10px; }
+    .card p { color: var(--gray); font-size: 0.9rem; line-height: 1.7; margin-bottom: 20px; }
+    .card-link { color: var(--red); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* === PAGE HERO (internal pages) === */
+    .page-header { background: var(--dark); color: #fff; padding: 64px 24px 48px; }
+    .page-header h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 12px; }
+    .page-header p { color: #9CA3AF; font-size: 1rem; max-width: 560px; }
+
+    /* === TESTING SECTION === */
+    .test-img { height: 460px; overflow: hidden; filter: grayscale(1); transition: filter 0.5s; }
+    .test-img:hover { filter: grayscale(0); }
+    .steps { display: flex; flex-direction: column; gap: 20px; margin-bottom: 36px; }
+    .step { display: flex; gap: 14px; align-items: flex-start; }
+    .step-num { min-width: 34px; height: 34px; background: var(--red); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+    .step h4 { color: #fff; margin-bottom: 4px; font-family: 'Oswald', sans-serif; font-size: 1rem; }
+    .step p { color: #9CA3AF; font-size: 0.85rem; }
+
+    /* === SEARCH / SUBSTANCES === */
+    .search-box { position: relative; margin-bottom: 32px; }
+    .search-box input { width: 100%; padding: 18px 18px 18px 50px; font-size: 1rem; border: 2px solid var(--border); outline: none; font-family: 'Inter', sans-serif; }
+    .search-box input:focus { border-color: var(--red); }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--gray); }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: var(--light); padding: 12px 16px; text-align: left; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); font-weight: 700; }
+    td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    tr:hover td { background: var(--light); }
+    .badge { padding: 3px 9px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge.red { background: rgba(220,38,38,0.1); color: var(--red); }
+    .badge.orange { background: rgba(234,88,12,0.1); color: #ea580c; }
+    .badge.green { background: rgba(22,163,74,0.1); color: #16a34a; }
+    .note { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2); padding: 16px 20px; margin-top: 24px; font-size: 0.85rem; color: #1d4ed8; }
+
+    /* === TESTIMONIAL === */
+    .testimonial { position: relative; min-height: 500px; display: flex; align-items: center; text-align: center; color: #fff; overflow: hidden; }
+    .testimonial img { position: absolute; inset: 0; height: 100%; filter: brightness(0.3); }
+    .testimonial-content { position: relative; z-index: 1; padding: 80px 24px; width: 100%; }
+    .testimonial blockquote { font-family: 'Oswald', sans-serif; font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 500; max-width: 740px; margin: 0 auto 24px; line-height: 1.35; text-transform: none; }
+    .cite-name { color: var(--red); font-weight: 700; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; display: block; }
+    .cite-role { color: #9CA3AF; font-size: 0.85rem; }
+
+    /* === FAQ === */
+    .faq-item { border: 1px solid var(--border); padding: 20px; margin-bottom: 10px; }
+    .faq-item h4 { font-size: 0.9rem; margin-bottom: 8px; }
+    .faq-item p { color: var(--gray); font-size: 0.85rem; line-height: 1.6; }
+
+    /* === ORG LINKS === */
+    .org-item { border: 1px solid var(--border); padding: 16px; margin-bottom: 10px; transition: border-color 0.2s; }
+    .org-item:hover { border-color: var(--red); }
+    .org-item h4 { color: var(--red); font-size: 0.85rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; margin-bottom: 4px; }
+    .org-item p { color: var(--gray); font-size: 0.82rem; }
+
+    /* === TUE BOX === */
+    .tue-box { background: var(--light); border: 1px solid var(--border); padding: 40px; margin-bottom: 48px; }
+    .tue-box p { color: var(--gray); font-size: 0.95rem; line-height: 1.8; margin-bottom: 24px; }
+
+    /* === MODULES === */
+    .module { border: 1px solid var(--border); padding: 24px; transition: box-shadow 0.2s; }
+    .module:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+    .module h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .module .dur { color: var(--gray); font-size: 0.8rem; margin-bottom: 14px; }
+    .bar { height: 3px; background: var(--border); }
+    .bar-fill { height: 100%; width: 0; background: var(--red); transition: width 0.4s; }
+    .module:hover .bar-fill { width: 100%; }
+
+    /* === FOOTER === */
+    footer { background: var(--dark); color: rgba(255,255,255,0.55); padding: 56px 24px 0; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; max-width: 1100px; margin: 0 auto 40px; }
+    .footer-logo { font-family: 'Oswald', sans-serif; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .footer-logo span { color: var(--red); }
+    .f-col h4 { color: #fff; font-size: 0.8rem; margin-bottom: 14px; }
+    .f-col a { display: block; font-size: 0.82rem; margin-bottom: 8px; color: rgba(255,255,255,0.45); text-decoration: none; }
+    .f-col a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding: 20px 0; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 0.78rem; }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .footer-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr; gap: 32px; }
+      .nav-links, .nav-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcome" style="position:fixed;inset:0;z-index:1000;background:#111827;display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity 0.5s ease;">
+  <div style="width:100%;max-width:560px;text-align:center;">
+    <div style="font-family:'Oswald',sans-serif;font-size:1.3rem;font-weight:700;color:#fff;letter-spacing:0.06em;margin-bottom:44px;display:flex;align-items:center;justify-content:center;gap:10px;">
+      <span style="color:#DC2626;font-size:1.5rem;">⚡</span> CLEANSPORT
+    </div>
+    <h1 style="font-family:'Oswald',sans-serif;font-size:clamp(1.8rem,5vw,3rem);text-transform:uppercase;color:#fff;line-height:1.1;margin-bottom:10px;">Welcome to<br><span style="color:#DC2626;">CleanSport</span></h1>
+    <p style="color:#9CA3AF;font-size:1rem;margin-bottom:36px;">Tell us who you are so we can guide you to the right resources.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;" id="roleGrid">
+      <button class="role-btn" data-role="athlete" onclick="selectRole(this)">
+        <div style="font-size:2rem;margin-bottom:8px;">🏃</div>
+        <div class="role-title">Athlete</div>
+        <div class="role-desc">I compete in organized sport</div>
+      </button>
+      <button class="role-btn" data-role="coach" onclick="selectRole(this)">
+        <div style="font-size:2rem;margin-bottom:8px;">📋</div>
+        <div class="role-title">Coach</div>
+        <div class="role-desc">I train and guide athletes</div>
+      </button>
+      <button class="role-btn" data-role="support" onclick="selectRole(this)">
+        <div style="font-size:2rem;margin-bottom:8px;">🩺</div>
+        <div class="role-title">Support Staff</div>
+        <div class="role-desc">Medical, physio, or team staff</div>
+      </button>
+      <button class="role-btn" data-role="official" onclick="selectRole(this)">
+        <div style="font-size:2rem;margin-bottom:8px;">⚖️</div>
+        <div class="role-title">Official / Fan</div>
+        <div class="role-desc">Referee, administrator, or public</div>
+      </button>
+    </div>
+    <button id="continueBtn" onclick="startSite()" disabled style="width:100%;padding:15px;background:rgba(255,255,255,0.08);color:#6B7280;border:none;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;cursor:not-allowed;border-radius:6px;transition:all 0.2s;">
+      Select your role to continue
+    </button>
+    <p style="color:#4B5563;font-size:0.74rem;margin-top:16px;">Your choice helps us show the most relevant information.</p>
+  </div>
+</div>
+
+<style>
+  .role-btn { background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.1); border-radius:8px; padding:22px 14px; cursor:pointer; text-align:center; transition:all 0.2s; color:#fff; width:100%; }
+  .role-btn:hover { border-color:rgba(220,38,38,0.5); background:rgba(220,38,38,0.06); }
+  .role-btn.selected { border-color:#DC2626; background:rgba(220,38,38,0.12); }
+  .role-title { font-family:'Oswald',sans-serif; font-size:0.95rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:5px; }
+  .role-btn.selected .role-title { color:#DC2626; }
+  .role-desc { font-size:0.76rem; color:#9CA3AF; }
+</style>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="go('home')">
+    <span>&#9889;</span> CLEANSPORT
+  </div>
+  <div class="nav-links">
+    <a onclick="go('about')">About</a>
+    <a onclick="go('education')">Education</a>
+    <a onclick="go('substances')">Prohibited List</a>
+    <a onclick="go('testing')">Testing</a>
+    <a onclick="go('resources')">Resources</a>
+  </div>
+  <button class="nav-btn" onclick="go('testing')">Report Doping</button>
+</nav>
+
+<!-- ===== HOME ===== -->
+<div id="home" class="page active">
+
+  <section class="hero">
+    <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1600&q=80" alt="Athletes" />
+    <div class="hero-content">
+      <div class="hero-tag">Play True. Play Fair.</div>
+      <h1>The True Measure<br>of Greatness</h1>
+      <p>Protecting athletes who win through hard work, dedication, and natural talent — not drugs.</p>
+      <div class="hero-btns">
+        <button class="btn btn-red" onclick="go('education')">Learn the Rules &rarr;</button>
+        <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.3)" onclick="go('substances')">Check Medications</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stats-grid">
+      <div><div class="stat-num">350K+</div><div class="stat-label">Tests Per Year</div></div>
+      <div><div class="stat-num">180+</div><div class="stat-label">Countries</div></div>
+      <div><div class="stat-num">1.2M</div><div class="stat-label">Athletes Educated</div></div>
+    </div>
+  </div>
+
+  <section class="section gray">
+    <div class="container">
+      <h2 style="font-size:clamp(1.6rem,3vw,2.5rem);text-align:center;margin-bottom:12px;">Our Foundation</h2>
+      <p style="text-align:center;color:var(--gray);margin-bottom:48px;max-width:580px;margin-left:auto;margin-right:auto;">Three core pillars that protect clean athletes and ensure a level playing field worldwide.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Prevention</h3>
+          <p>Value-based education programs targeting athletes from grassroots to elite level.</p>
+          <span class="card-link" onclick="go('education')">Learn more &rarr;</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>Detection</h3>
+          <p>Intelligent, rigorous in-and-out-of-competition testing backed by advanced science.</p>
+          <span class="card-link" onclick="go('testing')">Learn more &rarr;</span>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+          </div>
+          <h3>Adjudication</h3>
+          <p>Fair, transparent, and independent disciplinary processes protecting athlete rights.</p>
+          <span class="card-link" onclick="go('about')">Learn more &rarr;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <h2 style="font-size:clamp(1.6rem,3vw,2.5rem);margin-bottom:16px;">The Testing Process</h2>
+          <p style="color:#9CA3AF;margin-bottom:28px;">Know what to expect during a doping control session — your rights and responsibilities as an elite athlete.</p>
+          <div class="steps">
+            <div class="step"><div class="step-num">1</div><div><h4>Notification</h4><p>A Doping Control Officer notifies you and explains your rights.</p></div></div>
+            <div class="step"><div class="step-num">2</div><div><h4>Sample Collection</h4><p>Provide a urine and/or blood sample under observation.</p></div></div>
+            <div class="step"><div class="step-num">3</div><div><h4>Lab Analysis</h4><p>Samples go to a WADA-accredited lab for analysis.</p></div></div>
+          </div>
+          <button class="btn btn-white" onclick="go('testing')">Full Testing Guide &rarr;</button>
+        </div>
+        <div class="test-img">
+          <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80" alt="Lab testing" style="height:100%;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonial">
+    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1400&q=80" alt="Athlete" />
+    <div class="testimonial-content">
+      <blockquote>"A medal means nothing if you didn't earn it honestly. Clean sport is about respecting yourself, your competitors, and the spirit of the game."</blockquote>
+      <span class="cite-name">Sarah Jenkins</span>
+      <span class="cite-role">Olympic Gold Medalist, Track &amp; Field</span>
+    </div>
+  </section>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<div id="about" class="page">
+  <div class="page-header">
+    <div class="container">
+      <h1>About CleanSport</h1>
+      <p>We are the independent organization dedicated to protecting clean athletes and preserving the integrity of sport worldwide.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <h2 style="color:var(--red);font-size:clamp(1.4rem,2.5vw,2rem);margin-bottom:16px;">Our Mission</h2>
+          <p style="color:var(--gray);line-height:1.8;margin-bottom:14px;">To lead a collaborative worldwide movement for doping-free sport. Athletes have a fundamental right to compete free from performance-enhancing drugs.</p>
+          <p style="color:var(--gray);line-height:1.8;">Through education, scientific research, and intelligent testing, we aim to eliminate doping and ensure a level playing field for every athlete.</p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&q=80" alt="Athlete preparation" style="height:360px;" />
+      </div>
+    </div>
+  </section>
+  <section class="section gray">
+    <div class="container">
+      <h2 style="font-size:clamp(1.6rem,3vw,2.5rem);text-align:center;margin-bottom:48px;">Our Values</h2>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h3>Integrity</h3>
+          <p>We operate with transparency, honesty, and ethical conduct in all our work and decisions.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>Excellence</h3>
+          <p>World-class scientific research and rigorous testing protocols define our standard.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <h3>Respect</h3>
+          <p>We respect the rights of every athlete and honor their commitment to clean competition.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== EDUCATION ===== -->
+<div id="education" class="page">
+  <div class="page-header">
+    <div class="container">
+      <h1>Education &amp; Prevention</h1>
+      <p>Knowledge is your first line of defense. Understand your rights and responsibilities under the World Anti-Doping Code.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="margin-bottom:56px;">
+        <div style="border:1px solid rgba(220,38,38,0.2);background:rgba(220,38,38,0.03);padding:32px;">
+          <h3 style="color:var(--red);margin-bottom:14px;">Strict Liability</h3>
+          <p style="color:var(--gray);line-height:1.7;margin-bottom:10px;">You are responsible for <em>any</em> prohibited substance found in your body — regardless of how it got there.</p>
+          <p style="font-weight:700;">"I didn't know" is not a valid defense.</p>
+        </div>
+        <div style="border:1px solid var(--border);padding:32px;">
+          <h3 style="color:var(--red);margin-bottom:14px;">The WADA Code</h3>
+          <p style="color:var(--gray);line-height:1.7;margin-bottom:16px;">The World Anti-Doping Code harmonizes anti-doping policies across all sports organizations globally.</p>
+          <a href="#" style="color:var(--red);font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">&#8595; Download 2024 Code</a>
+        </div>
+      </div>
+      <h2 style="font-size:clamp(1.4rem,2.5vw,2rem);margin-bottom:32px;">E-Learning Modules</h2>
+      <div class="grid-3">
+        <div class="module"><h4>Anti-Doping Basics</h4><div class="dur">30 min &bull; Interactive</div><div class="bar"><div class="bar-fill"></div></div></div>
+        <div class="module"><h4>Supplements &amp; Risks</h4><div class="dur">45 min &bull; Interactive</div><div class="bar"><div class="bar-fill"></div></div></div>
+        <div class="module"><h4>Whereabouts Rules</h4><div class="dur">20 min &bull; Interactive</div><div class="bar"><div class="bar-fill"></div></div></div>
+        <div class="module"><h4>The Testing Process</h4><div class="dur">25 min &bull; Interactive</div><div class="bar"><div class="bar-fill"></div></div></div>
+        <div class="module"><h4>TUE Applications</h4><div class="dur">30 min &bull; Interactive</div><div class="bar"><div class="bar-fill"></div></div></div>
+        <div class="module"><h4>Coaches &amp; Staff</h4><div class="dur">60 min &bull; Interactive</div><div class="bar"><div class="bar-fill"></div></div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== PROHIBITED LIST ===== -->
+<div id="substances" class="page">
+  <div class="page-header">
+    <div class="container">
+      <h1>Prohibited List</h1>
+      <p>Search medications and substances to check their status under the current WADA Prohibited List.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container" style="max-width:900px;">
+      <div class="search-box">
+        <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="search" placeholder="Search substance name or category..." oninput="filterTable()" />
+      </div>
+      <div style="border:1px solid var(--border);overflow:hidden;">
+        <table>
+          <thead><tr><th>Substance</th><th>Category</th><th>Status</th><th>Note</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="note"><strong>Disclaimer:</strong> For informational purposes only. Always refer to the official WADA Prohibited List or consult your National Anti-Doping Organization.</div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== TESTING ===== -->
+<div id="testing" class="page">
+  <div class="page-header">
+    <div class="container">
+      <h1>The Testing Process</h1>
+      <p>Transparent, rigorous, and respectful. Know what to expect during a doping control session.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container" style="max-width:800px;">
+
+      <div style="border-bottom:2px solid var(--red);padding-bottom:12px;margin-bottom:28px;">
+        <h2 style="color:var(--red);font-size:1.6rem;">1. Notification</h2>
+      </div>
+      <p style="color:var(--gray);line-height:1.8;margin-bottom:12px;">A Doping Control Officer (DCO) can notify you for a test anytime, anywhere. Show your ID and stay in their sight until the process is complete.</p>
+      <p style="color:var(--gray);line-height:1.8;margin-bottom:48px;">Elite athletes in a Registered Testing Pool must provide a daily 60-minute time slot for whereabouts testing.</p>
+
+      <div style="border-bottom:2px solid var(--red);padding-bottom:12px;margin-bottom:28px;">
+        <h2 style="color:var(--red);font-size:1.6rem;">2. Sample Collection</h2>
+      </div>
+      <p style="color:var(--gray);line-height:1.8;margin-bottom:12px;">You choose a sealed collection kit. The sample is split into an 'A' bottle and a 'B' bottle — both sealed in front of you.</p>
+      <p style="color:var(--gray);line-height:1.8;margin-bottom:48px;">Urine requires 90mL minimum. Blood is collected by a qualified Blood Collection Officer (BCO).</p>
+
+      <div style="border-bottom:2px solid var(--red);padding-bottom:12px;margin-bottom:28px;">
+        <h2 style="color:var(--red);font-size:1.6rem;">3. Analysis &amp; Results</h2>
+      </div>
+      <p style="color:var(--gray);line-height:1.8;margin-bottom:12px;">Declare all medications taken in the last 7 days on the Doping Control Form, then sign to confirm the procedure.</p>
+      <p style="color:var(--gray);line-height:1.8;">Samples are analyzed anonymously at a WADA-accredited lab. If an Adverse Analytical Finding is returned, you will be notified and can request 'B' sample analysis.</p>
+
+      <div style="background:var(--light);border:1px solid var(--border);padding:28px;margin-top:48px;">
+        <h3 style="margin-bottom:14px;">Your Rights During Testing</h3>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+          <li style="color:var(--gray);font-size:0.9rem;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:var(--red);">&bull;</span> Have a representative or interpreter present</li>
+          <li style="color:var(--gray);font-size:0.9rem;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:var(--red);">&bull;</span> Ask for more information about the process</li>
+          <li style="color:var(--gray);font-size:0.9rem;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:var(--red);">&bull;</span> Request modifications if you are a minor or have an impairment</li>
+          <li style="color:var(--gray);font-size:0.9rem;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:var(--red);">&bull;</span> Document any concerns on the Doping Control Form</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== RESOURCES ===== -->
+<div id="resources" class="page">
+  <div class="page-header">
+    <div class="container">
+      <h1>Resources &amp; Support</h1>
+      <p>Essential documents, forms, and links to support clean athletes and their support personnel.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container">
+      <h2 style="font-size:clamp(1.3rem,2.5vw,1.8rem);border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:28px;">Therapeutic Use Exemptions (TUE)</h2>
+      <div class="tue-box">
+        <p>If the medication you need to take is on the Prohibited List, a Therapeutic Use Exemption (TUE) may authorize you to use it legally while competing.</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <button class="btn btn-red">&#8595; TUE Application Form</button>
+          <button class="btn btn-outline">TUE Guidelines</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size:1.1rem;margin-bottom:20px;">Key Organizations</h3>
+          <div class="org-item"><h4>World Anti-Doping Agency (WADA)</h4><p>Global independent agency governing anti-doping.</p></div>
+          <div class="org-item"><h4>Court of Arbitration for Sport (CAS)</h4><p>Independent institution for sports-related disputes.</p></div>
+          <div class="org-item"><h4>Global DRO</h4><p>Online drug reference tool for checking medication status.</p></div>
+          <div class="org-item"><h4>International Olympic Committee (IOC)</h4><p>Supreme authority of the Olympic movement.</p></div>
+        </div>
+        <div>
+          <h3 style="font-size:1.1rem;margin-bottom:20px;">FAQs</h3>
+          <div class="faq-item"><h4>What is strict liability?</h4><p>Athletes are responsible for any prohibited substance in their body, regardless of intent.</p></div>
+          <div class="faq-item"><h4>Can I refuse a test?</h4><p>Refusing without compelling justification is an Anti-Doping Rule Violation (ADRV).</p></div>
+          <div class="faq-item"><h4>Are supplements safe?</h4><p>No supplement is 100% safe — they carry a high risk of contamination with prohibited substances.</p></div>
+          <div class="faq-item"><h4>How long is a TUE valid?</h4><p>Usually 1–4 years, depending on the medical condition.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo" onclick="go('home')"><span>&#9889;</span> CLEANSPORT</div>
+      <p style="font-size:0.85rem;max-width:240px;line-height:1.6;">Dedicated to preserving the integrity of sports and protecting clean athletes worldwide.</p>
+    </div>
+    <div class="f-col">
+      <h4>Athletes</h4>
+      <a onclick="go('substances')">Prohibited List</a>
+      <a onclick="go('testing')">Testing Process</a>
+      <a onclick="go('resources')">TUE Applications</a>
+      <a onclick="go('education')">E-Learning</a>
+    </div>
+    <div class="f-col">
+      <h4>Organization</h4>
+      <a onclick="go('about')">About Us</a>
+      <a onclick="go('about')">Governance</a>
+      <a onclick="go('resources')">News &amp; Media</a>
+      <a onclick="go('about')">Contact</a>
+    </div>
+    <div class="f-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Policy</a>
+      <a href="#">Whistleblower Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span id="yr"></span>
+    <span>Compete with integrity.</span>
+  </div>
+</footer>
+
+<script>
+  // ── Data ──
+  const substances = [
+    { name: "Pseudoephedrine",     cat: "Stimulants",        status: "orange", label: "In-Competition Only", note: "Threshold: 150 mcg/mL" },
+    { name: "Testosterone",        cat: "Anabolic Agents",   status: "red",    label: "Always Prohibited",   note: "—" },
+    { name: "Salbutamol",          cat: "Stimulants",        status: "orange", label: "In-Competition Only", note: "Threshold: 1000 ng/mL" },
+    { name: "Erythropoietin (EPO)",cat: "Peptide Hormones",  status: "red",    label: "Always Prohibited",   note: "—" },
+    { name: "Insulin",             cat: "Peptide Hormones",  status: "red",    label: "Always Prohibited",   note: "—" },
+    { name: "Cannabis / THC",      cat: "Cannabinoids",      status: "orange", label: "In-Competition Only", note: "Threshold applies" },
+    { name: "Ibuprofen",           cat: "NSAIDs",            status: "green",  label: "Permitted",           note: "—" },
+    { name: "Caffeine",            cat: "Monitoring Program",status: "green",  label: "Permitted",           note: "Monitored" },
+  ];
+
+  // ── Welcome Screen ──
+  let selectedRole = null;
+
+  function selectRole(btn) {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedRole = btn.dataset.role;
+    const roleLabels = { athlete:'Athlete', coach:'Coach', support:'Support Staff', official:'Official' };
+    const cb = document.getElementById('continueBtn');
+    cb.disabled = false;
+    cb.style.background = '#DC2626';
+    cb.style.color = '#fff';
+    cb.style.cursor = 'pointer';
+    cb.textContent = 'Continue as ' + roleLabels[selectedRole] + ' →';
+  }
+
+  function startSite() {
+    if (!selectedRole) return;
+    const w = document.getElementById('welcome');
+    w.style.opacity = '0';
+    setTimeout(() => { w.style.display = 'none'; }, 500);
+
+    // Show role badge in nav
+    const roleColors = { athlete:'#DC2626', coach:'#1d4ed8', support:'#15803d', official:'#374151' };
+    const roleLabels = { athlete:'🏃 Athlete', coach:'📋 Coach', support:'🩺 Support Staff', official:'⚖️ Official' };
+    const badge = document.createElement('span');
+    badge.textContent = roleLabels[selectedRole];
+    badge.style.cssText = `background:${roleColors[selectedRole]};color:#fff;font-size:0.72rem;font-weight:700;padding:4px 10px;letter-spacing:0.05em;text-transform:uppercase;border-radius:4px;`;
+    document.querySelector('nav').appendChild(badge);
+  }
+
+  // ── Navigation ──
+  function go(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (id === 'substances') renderTable();
+  }
+
+  // ── Substances Table ──
+  function renderTable(q = '') {
+    const rows = substances.filter(s =>
+      s.name.toLowerCase().includes(q.toLowerCase()) ||
+      s.cat.toLowerCase().includes(q.toLowerCase())
+    );
+    document.getElementById('tableBody').innerHTML = rows.length
+      ? rows.map(s => `
+          <tr>
+            <td><strong>${s.name}</strong></td>
+            <td style="color:var(--gray)">${s.cat}</td>
+            <td><span class="badge ${s.status}">${s.label}</span></td>
+            <td style="color:var(--gray);font-size:0.82rem;">${s.note}</td>
+          </tr>`).join('')
+      : `<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--gray);">No results for "${q}"</td></tr>`;
+  }
+
+  function filterTable() { renderTable(document.getElementById('search').value); }
+
+  // ── Init ──
+  renderTable();
+  document.getElementById('yr').textContent = '© ' + new Date().getFullYear() + ' CleanSport. All rights reserved.';
+</script>
+</body>
+</html>
