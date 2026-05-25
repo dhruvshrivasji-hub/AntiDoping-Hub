@@ -145,7 +145,7 @@ router.get("/users/profile/:username", async (req, res) => {
       `SELECT module_slug AS slug, score, completed FROM progress WHERE user_id = $1`,
       [user.id]
     );
-    const completedModules = progressResult.rows.filter((r) => r.completed);
+    const completedModules = progressResult.rows.filter((r: { completed: boolean; score: number }) => r.completed);
     const avgScore = completedModules.length
       ? Math.round(completedModules.reduce((s: number, r: { score: number }) => s + (r.score ?? 0), 0) / completedModules.length)
       : 0;

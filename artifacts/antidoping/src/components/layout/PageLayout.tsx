@@ -1,13 +1,14 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import type { UserResource } from "@clerk/types";
 import type { UserProfile } from "@/lib/api";
+
+type ClerkUser = { firstName?: string | null };
 
 interface PageLayoutProps {
   children: React.ReactNode;
   role: string;
-  user: UserResource | null | undefined;
+  user: ClerkUser | null | undefined;
   profile: UserProfile | null;
   onSignOut: () => void;
 }

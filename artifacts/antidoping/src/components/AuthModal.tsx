@@ -1,5 +1,21 @@
 import { useState } from "react";
-import { login, register, saveAuth } from "@/lib/api";
+
+async function register(name: string, email: string, password: string, role: string) {
+  const res = await fetch("/api/auth/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, email, password, role }) });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? "Registration failed");
+  return data as { token: string; user: { id: number; name: string; email: string; role: string } };
+}
+async function login(email: string, password: string) {
+  const res = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? "Login failed");
+  return data as { token: string; user: { id: number; name: string; email: string; role: string } };
+}
+function saveAuth(token: string, user: { id: number; name: string; email: string; role: string }) {
+  localStorage.setItem("auth_token", token);
+  localStorage.setItem("auth_user", JSON.stringify(user));
+}
 
 interface Props {
   initialRole: string;

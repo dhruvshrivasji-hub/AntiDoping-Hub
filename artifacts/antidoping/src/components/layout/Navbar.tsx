@@ -3,8 +3,9 @@ import { Link, useLocation } from "wouter";
 import { Activity, User, LayoutDashboard, LogOut, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useClerk } from "@clerk/react";
-import type { UserResource } from "@clerk/types";
 import type { UserProfile } from "@/lib/api";
+
+type ClerkUser = { firstName?: string | null };
 
 const roleColors: Record<string, string> = {
   athlete: "bg-red-600 text-white",
@@ -26,7 +27,7 @@ function getInitials(name: string) {
 
 interface NavbarProps {
   role: string;
-  user: UserResource | null | undefined;
+  user: ClerkUser | null | undefined;
   profile: UserProfile | null;
   onSignOut: () => void;
 }
