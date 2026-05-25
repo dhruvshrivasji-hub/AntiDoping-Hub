@@ -42,6 +42,7 @@ export default function Navbar({ role, user, profile, onSignOut }: NavbarProps) 
   const navLinks = [
     { href: "/about", label: "About" },
     { href: "/education", label: "Education" },
+    { href: "/lectures", label: "Lectures" },
     { href: "/substances", label: "Prohibited List" },
     { href: "/testing", label: "Testing" },
     { href: "/resources", label: "Resources" },

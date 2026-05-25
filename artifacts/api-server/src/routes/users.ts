@@ -142,7 +142,7 @@ router.get("/users/profile/:username", async (req, res) => {
     const user = userResult.rows[0];
 
     const progressResult = await pool.query(
-      `SELECT slug, score, completed FROM progress WHERE user_id = $1`,
+      `SELECT module_slug AS slug, score, completed FROM progress WHERE user_id = $1`,
       [user.id]
     );
     const completedModules = progressResult.rows.filter((r) => r.completed);

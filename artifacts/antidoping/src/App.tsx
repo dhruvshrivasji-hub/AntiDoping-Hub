@@ -17,6 +17,7 @@ import Resources from "./pages/Resources";
 import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
+import Lectures from "./pages/Lectures";
 import RoleSelection from "./components/RoleSelection";
 import ProfileSetup from "./components/ProfileSetup";
 import {
@@ -221,6 +222,7 @@ function AppRoutes() {
         <Route path="/testing" component={Testing} />
         <Route path="/resources" component={Resources} />
         <Route path="/leaderboard" component={Leaderboard} />
+        <Route path="/lectures" component={Lectures} />
         <Route path="/profile/:username" component={Profile} />
         <Route path="/dashboard">
           <Show when="signed-in">
