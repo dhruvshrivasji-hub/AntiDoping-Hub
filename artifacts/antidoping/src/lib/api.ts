@@ -52,3 +52,7 @@ export async function completeModule(slug: string, score = 100) {
     body: JSON.stringify({ score }),
   });
 }
+
+export async function getLeaderboard() {
+  return request("/leaderboard");
+}

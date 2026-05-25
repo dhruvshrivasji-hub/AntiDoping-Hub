@@ -36,6 +36,7 @@ export default function Navbar({ role, user, onSignOut }: NavbarProps) {
     { href: "/substances", label: "Prohibited List" },
     { href: "/testing", label: "Testing" },
     { href: "/resources", label: "Resources" },
+    { href: "/leaderboard", label: "Leaderboard" },
   ];
 
   async function handleSignOut() {

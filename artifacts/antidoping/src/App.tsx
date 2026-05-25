@@ -15,6 +15,7 @@ import Substances from "./pages/Substances";
 import Testing from "./pages/Testing";
 import Resources from "./pages/Resources";
 import Dashboard from "./pages/Dashboard";
+import Leaderboard from "./pages/Leaderboard";
 import RoleSelection from "./components/RoleSelection";
 import { syncUser, getUserRole, setAuthTokenGetter } from "./lib/api";
 
@@ -201,6 +202,7 @@ function AppRoutes() {
             <Redirect to="/sign-in" />
           </Show>
         </Route>
+        <Route path="/leaderboard" component={Leaderboard} />
         <Route>
           <Redirect to="/" />
         </Route>
