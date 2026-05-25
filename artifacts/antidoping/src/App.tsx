@@ -16,8 +16,17 @@ import Testing from "./pages/Testing";
 import Resources from "./pages/Resources";
 import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
+import Profile from "./pages/Profile";
 import RoleSelection from "./components/RoleSelection";
-import { syncUser, getUserRole, setAuthTokenGetter } from "./lib/api";
+import ProfileSetup from "./components/ProfileSetup";
+import {
+  syncUser,
+  getMyProfile,
+  updateProfile,
+  setAuthTokenGetter,
+  type UserProfile,
+  type UpdateProfilePayload,
+} from "./lib/api";
 
 const queryClient = new QueryClient();
 
@@ -133,12 +142,10 @@ function ClerkQueryClientCacheInvalidator() {
 function AppRoutes() {
   const { user, isLoaded } = useUser();
   const { getToken } = useAuth();
-  const [role, setRole] = useState<string | null>(null);
-  const [roleLoading, setRoleLoading] = useState(true);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
   const [, setLocation] = useLocation();
 
-  // Register Clerk's getToken so every API request carries a valid Bearer token.
-  // This is required in development where Clerk session cookies aren't on our domain.
   useEffect(() => {
     setAuthTokenGetter(getToken);
   }, [getToken]);
@@ -146,16 +153,14 @@ function AppRoutes() {
   useEffect(() => {
     if (!isLoaded) return;
     if (!user) {
-      setRoleLoading(false);
+      setProfile(null);
+      setProfileLoading(false);
       return;
     }
-    // Load role from DB for this Clerk user
-    getUserRole()
-      .then((data) => {
-        if (data?.role) setRole(data.role);
-      })
-      .catch(() => {})
-      .finally(() => setRoleLoading(false));
+    getMyProfile()
+      .then((p) => setProfile(p))
+      .catch(() => setProfile(null))
+      .finally(() => setProfileLoading(false));
   }, [user, isLoaded]);
 
   async function handleRoleSelected(selectedRole: string) {
@@ -166,11 +171,17 @@ function AppRoutes() {
       email: user.primaryEmailAddress?.emailAddress ?? "",
       role: selectedRole,
     });
-    setRole(selectedRole);
+    const fresh = await getMyProfile();
+    setProfile(fresh);
   }
 
-  // Not loaded yet
-  if (!isLoaded || (user && roleLoading)) {
+  async function handleProfileSetup(payload: UpdateProfilePayload) {
+    await updateProfile(payload);
+    const fresh = await getMyProfile();
+    setProfile(fresh);
+  }
+
+  if (!isLoaded || (user && profileLoading)) {
     return (
       <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center">
         <div className="text-white text-lg font-medium animate-pulse">Loading CleanSport…</div>
@@ -178,15 +189,30 @@ function AppRoutes() {
     );
   }
 
-  // Signed in but no role yet
-  if (user && !role) {
+  // Step 1: signed in but no DB record yet → choose role
+  if (user && !profile?.role) {
     return <RoleSelection onComplete={handleRoleSelected} userName={user.firstName ?? "Athlete"} />;
   }
 
-  const effectiveRole = role ?? "athlete";
+  // Step 2: has role but no username → complete profile
+  if (user && profile?.role && !profile.username) {
+    return (
+      <ProfileSetup
+        userName={profile.name}
+        onComplete={handleProfileSetup}
+      />
+    );
+  }
+
+  const effectiveRole = profile?.role ?? "athlete";
 
   return (
-    <PageLayout role={effectiveRole} user={user} onSignOut={() => setLocation("/")}>
+    <PageLayout
+      role={effectiveRole}
+      user={user}
+      profile={profile}
+      onSignOut={() => { setProfile(null); setLocation("/"); }}
+    >
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/about" component={About} />
@@ -194,6 +220,8 @@ function AppRoutes() {
         <Route path="/substances" component={Substances} />
         <Route path="/testing" component={Testing} />
         <Route path="/resources" component={Resources} />
+        <Route path="/leaderboard" component={Leaderboard} />
+        <Route path="/profile/:username" component={Profile} />
         <Route path="/dashboard">
           <Show when="signed-in">
             <Dashboard role={effectiveRole} />
@@ -202,7 +230,6 @@ function AppRoutes() {
             <Redirect to="/sign-in" />
           </Show>
         </Route>
-        <Route path="/leaderboard" component={Leaderboard} />
         <Route>
           <Redirect to="/" />
         </Route>
@@ -226,24 +253,24 @@ function ClerkProviderWithRoutes() {
       <QueryClientProvider client={queryClient}>
         <ClerkQueryClientCacheInvalidator />
         <Switch>
-          <Route path="/sign-in/*?" component={SignInPage} />
-          <Route path="/sign-up/*?" component={SignUpPage} />
+          <Route path="/sign-in" component={SignInPage} />
+          <Route path="/sign-in/sso-callback" component={SignInPage} />
+          <Route path="/sign-up" component={SignUpPage} />
+          <Route path="/sign-up/sso-callback" component={SignUpPage} />
           <Route component={AppRoutes} />
         </Switch>
+        <Toaster />
       </QueryClientProvider>
     </ClerkProvider>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <TooltipProvider>
       <WouterRouter base={basePath}>
         <ClerkProviderWithRoutes />
       </WouterRouter>
-      <Toaster />
     </TooltipProvider>
   );
 }
-
-export default App;
