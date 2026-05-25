@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk, useUser } from "@clerk/react";
+import { ClerkProvider, SignIn, SignUp, Show, useClerk, useUser, useAuth } from "@clerk/react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { dark } from "@clerk/themes";
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect } from "wouter";
@@ -16,7 +16,7 @@ import Testing from "./pages/Testing";
 import Resources from "./pages/Resources";
 import Dashboard from "./pages/Dashboard";
 import RoleSelection from "./components/RoleSelection";
-import { syncUser, getUserRole } from "./lib/api";
+import { syncUser, getUserRole, setAuthTokenGetter } from "./lib/api";
 
 const queryClient = new QueryClient();
 
@@ -131,9 +131,16 @@ function ClerkQueryClientCacheInvalidator() {
 
 function AppRoutes() {
   const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
   const [role, setRole] = useState<string | null>(null);
   const [roleLoading, setRoleLoading] = useState(true);
   const [, setLocation] = useLocation();
+
+  // Register Clerk's getToken so every API request carries a valid Bearer token.
+  // This is required in development where Clerk session cookies aren't on our domain.
+  useEffect(() => {
+    setAuthTokenGetter(getToken);
+  }, [getToken]);
 
   useEffect(() => {
     if (!isLoaded) return;
