@@ -56,3 +56,9 @@ export async function completeModule(slug: string, score = 100) {
 export async function getLeaderboard() {
   return request("/leaderboard");
 }
+
+export async function getProgress(): Promise<
+  { slug: string; title: string; completed: boolean; score: number }[]
+> {
+  return request("/progress");
+}
